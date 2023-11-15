@@ -81,3 +81,27 @@ def ban_user(update: Update, context: CallbackContext) -> None:
 def unban_user(update: Update, context: CallbackContext) -> None:
     # Cek apakah pengguna adalah admin sebelum membuka banned pengguna
     if update.message.from_user.id == ADMIN_USER_ID:
+
+def broadcast(update: Update, context: CallbackContext) -> None:
+    # Cek apakah pengguna adalah admin sebelum melakukan broadcast
+    if update.message.from_user.id == ADMIN_USER_ID:
+        message_text = ' '.join(context.args)
+        context.bot.send_message(chat_id=CHANNEL_PUBLIK_ID, text=message_text)
+
+def ping(update: Update, context: CallbackContext) -> None:
+    context.bot.send_message(chat_id=update.effective_chat.id, text='Pong!')
+
+def user_count(update: Update, context: CallbackContext) -> None:
+    user_count = context.bot.get_chat_members_count(chat_id=CHANNEL_PUBLIK_ID)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=f'Jumlah pengguna: {user_count}')
+
+def ban_user(update: Update, context: CallbackContext) -> None:
+    # Cek apakah pengguna adalah admin sebelum melarang pengguna
+    if update.message.from_user.id == ADMIN_USER_ID:
+        user_id = context.args[0]
+        banned_users.add(int(user_id))
+        context.bot.send_message(chat_id=update.effective_chat.id, text=f'Pengguna dengan ID {user_id} telah dibanned.')
+
+def unban_user(update: Update, context: CallbackContext) -> None:
+    # Cek apakah pengguna adalah admin sebelum membuka banned pengguna
+    if update.message.from_user.id == ADMIN_USER_ID:
